@@ -111,6 +111,7 @@ type MarinadeFeeCents struct {
 }
 
 type MarinadeState struct {
+	Reserve                   [8]byte
 	MsolMint                  ag_solanago.PublicKey
 	AdminAuthority            ag_solanago.PublicKey
 	OperationalSolAccount     ag_solanago.PublicKey
@@ -125,21 +126,24 @@ type MarinadeState struct {
 	AvailableReserveBalance   uint64
 	MsolSupply                uint64
 	MsolPrice                 uint64
-	CirculatingTicketCount    uint64
-	CirculatingTicketBalance  uint64
-	LentFromReserve           uint64
-	MinDeposit                uint64
-	MinWithdraw               uint64
-	StakingSolCap             uint64
-	EmergencyCoolingDown      uint64
-	// PauseAuthority              ag_solanago.PublicKey
-	// Paused                      bool
-	// DelayedUnstakeFee           MarinadeFeeCents
-	// WithdrawStakeAccountFee     MarinadeFeeCents
-	// WithdrawStakeAccountEnabled bool
-	// LastStakeMoveEpoch          uint64
-	// StakeMoved                  uint64
-	// MaxStakeMovedPerEpoch       MarinadeFee
+
+	CirculatingTicketCount uint64
+
+	CirculatingTicketBalance uint64
+	LentFromReserve          uint64
+	MinDeposit               uint64
+	MinWithdraw              uint64
+	StakingSolCap            uint64
+	EmergencyCoolingDown     uint64
+
+	PauseAuthority              ag_solanago.PublicKey
+	Paused                      bool
+	DelayedUnstakeFee           MarinadeFeeCents
+	WithdrawStakeAccountFee     MarinadeFeeCents
+	WithdrawStakeAccountEnabled bool
+	LastStakeMoveEpoch          uint64
+	StakeMoved                  uint64
+	MaxStakeMovedPerEpoch       MarinadeFee
 }
 
 var stakePools = []string{
@@ -199,6 +203,7 @@ func main() {
 	flag.Parse()
 	client := rpc.New(flag.Arg(0))
 	call[StakePool](client, stakePools)
+	// call[marinade_finance.State](client, marinadePools)
 	call[MarinadeState](client, marinadePools)
 	call[StakePool](client, unknownPools)
 }
